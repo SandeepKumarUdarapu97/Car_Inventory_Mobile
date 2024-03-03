@@ -2,13 +2,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface MainState {
-    cars : object,
-    purchases: object;
+    cars : [],
+    purchases: [];
 }
 
 const initialState: MainState = {
-    cars : {},
-    purchases: {}
+    cars : [],
+    purchases: []
 };
 
 const mainSlice = createSlice({
