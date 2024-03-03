@@ -93,7 +93,7 @@ const UserScreen: React.FC<UserScreenProps> = ({navigation}) => {
         backgroundColor: 'white',
       }}>
       <View>
-        <SectionalButton buttonText="View cars" onPress={() => {}} />
+        <SectionalButton buttonText="View cars" onPress={() => navigation.navigate('ViewUserCars')} />
         <SectionalButton buttonText="Purchase history" onPress={() => {}} />
       </View>
       <View style={{alignItems: 'flex-end'}}>

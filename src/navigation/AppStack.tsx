@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, {useEffect, useState} from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
 import AdminScreen from '../screens/AdminScreen';
 import UserScreen from '../screens/UserScreen';
-import { getData } from '../util';
+import {getData} from '../util';
 import LoadingComponent from '../components/LoadingComponent';
+import ViewCars from '../screens/ViewCars';
 
 const Stack = createStackNavigator();
 
@@ -21,7 +22,7 @@ const AppStack = () => {
     };
 
     fetchRole();
-  }, []); 
+  }, []);
 
   if (role === null) {
     return <LoadingComponent />;
@@ -29,30 +30,43 @@ const AppStack = () => {
 
   if (role === 'user') {
     return (
-      <Stack.Navigator screenOptions={{
-        headerTitleAlign: 'center',
-        headerLeft: null, // Disable the back button
-      }} initialRouteName="User">
-        <Stack.Screen name="User" component={UserScreen} />
+      <Stack.Navigator initialRouteName="User">
+        <Stack.Screen
+          name="User"
+          component={UserScreen}
+          options={{
+            title: 'User',
+            headerTitleAlign: 'center',
+            headerLeft: null,
+          }}
+        />
+        <Stack.Screen
+          name="ViewUserCars"
+          component={ViewCars}
+          options={{title: 'View cars', headerTitleAlign: 'center'}}
+        />
       </Stack.Navigator>
     );
   }
 
   if (role === 'admin') {
     return (
-      <Stack.Navigator
-      initialRouteName="Admin"
-      screenOptions={{
-        headerTitleAlign: 'center',
-        headerLeft: null, // Disable the back button
-      }}
-    >
-      <Stack.Screen
-        name="Admin"
-        component={AdminScreen}
-        options={{ title: 'Admin' }} // Set the header title
-      />
-    </Stack.Navigator>
+      <Stack.Navigator initialRouteName="Admin">
+        <Stack.Screen
+          name="Admin"
+          component={AdminScreen}
+          options={{
+            title: 'Admin',
+            headerTitleAlign: 'center',
+            headerLeft: null,
+          }}
+        />
+        <Stack.Screen
+          name="ViewCars"
+          component={ViewCars}
+          options={{title: 'View cars', headerTitleAlign: 'center'}}
+        />
+      </Stack.Navigator>
     );
   }
 

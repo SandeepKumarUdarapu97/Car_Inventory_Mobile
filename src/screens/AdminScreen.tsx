@@ -10,15 +10,16 @@ import {useNavigation} from '@react-navigation/native';
 import {updateCars} from '../redux/MainSlice';
 
 const {width, height} = Dimensions.get('window');
-interface AdminScreenProps {}
+interface AdminScreenProps {
+  navigation: any
+}
 
-const AdminScreen: React.FC<AdminScreenProps> = () => {
+const AdminScreen: React.FC<AdminScreenProps> = ({navigation}) => {
   const [token, setToken] = useState<string>('');
   const [dataFetched, setDataFetched] = useState<boolean>(false);
   const cars = useSelector((state: RootState) => state.main.cars);
 
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,7 +94,7 @@ const AdminScreen: React.FC<AdminScreenProps> = () => {
         backgroundColor: 'white',
       }}>
       <View>
-        <SectionalButton buttonText="View cars" onPress={() => {}} />
+        <SectionalButton buttonText="View cars" onPress={() => navigation.navigate('ViewCars')} />
         <SectionalButton buttonText="Manage inventory" onPress={() => {}} />
         <SectionalButton buttonText="Purchase history" onPress={() => {}} />
       </View>
