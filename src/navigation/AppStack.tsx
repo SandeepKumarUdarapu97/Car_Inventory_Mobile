@@ -29,7 +29,10 @@ const AppStack = () => {
 
   if (role === 'user') {
     return (
-      <Stack.Navigator initialRouteName="User">
+      <Stack.Navigator screenOptions={{
+        headerTitleAlign: 'center',
+        headerLeft: null, // Disable the back button
+      }} initialRouteName="User">
         <Stack.Screen name="User" component={UserScreen} />
       </Stack.Navigator>
     );
@@ -37,9 +40,19 @@ const AppStack = () => {
 
   if (role === 'admin') {
     return (
-      <Stack.Navigator initialRouteName="Admin">
-        <Stack.Screen name="Admin" component={AdminScreen} />
-      </Stack.Navigator>
+      <Stack.Navigator
+      initialRouteName="Admin"
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerLeft: null, // Disable the back button
+      }}
+    >
+      <Stack.Screen
+        name="Admin"
+        component={AdminScreen}
+        options={{ title: 'Admin' }} // Set the header title
+      />
+    </Stack.Navigator>
     );
   }
 

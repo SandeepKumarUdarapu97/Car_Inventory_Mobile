@@ -19,20 +19,6 @@ export const fetchCars = async (token: string): Promise<object> => {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    // if (response.status === 401) {
-    //   removeData('token');
-    //   removeData('role');
-    //   Alert.alert(
-    //     'Session Expired',
-    //     'Your session has expired. Please log in again.',
-    //     [{ text: 'OK', onPress: () => navigation.navigate("Login") }]
-    //   );
-    // }
-
-    // if (!response.ok) {
-    //   throw new Error(`Failed to fetch cars. Status: ${response.status}`);
-    // }
     return response;
   } catch (error) {
     console.error('Error fetching cars:', error,token);
@@ -42,13 +28,16 @@ export const fetchCars = async (token: string): Promise<object> => {
 
 
 
-export const fetchAdminCars = async (): Promise<CarData[]> => {
+export const fetchAdminCars = async (token:string): Promise<object> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/admin/cars`);
-    const data: CarData[] = await response.json();
-    return data;
+    const response = await fetch(`${API_BASE_URL}/admin/cars`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
   } catch (error) {
-    console.error('Error fetching cars:', error);
+    console.error('Error fetching Admin cars:', error);
     throw error;
   }
 };
