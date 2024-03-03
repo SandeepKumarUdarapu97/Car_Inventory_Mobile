@@ -95,8 +95,8 @@ const AdminScreen: React.FC<AdminScreenProps> = ({navigation}) => {
       }}>
       <View>
         <SectionalButton buttonText="View cars" onPress={() => navigation.navigate('ViewCars')} />
-        <SectionalButton buttonText="Manage inventory" onPress={() => {}} />
-        <SectionalButton buttonText="Purchase history" onPress={() => {}} />
+        <SectionalButton buttonText="Manage inventory" onPress={() => navigation.navigate('ManageInventory')} />
+        <SectionalButton buttonText="Purchase history" onPress={() => navigation.navigate('PurchaseHistory')} />
       </View>
       <View style={{alignItems: 'flex-end'}}>
         <TouchableOpacity

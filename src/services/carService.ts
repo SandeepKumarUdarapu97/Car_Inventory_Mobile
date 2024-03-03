@@ -42,6 +42,33 @@ export const fetchAdminCars = async (token:string): Promise<object> => {
   }
 };
 
+export const addCar = async (token: string, brand: string, model: string, quantity: number, price: number): Promise<object> => {
+  try {
+     const response = await fetch(`${API_BASE_URL}/admin/add-car`, {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         Authorization: `Bearer ${token}`,
+       },
+       body: JSON.stringify({
+         modelName: model,
+         brand: brand,
+         quantity: quantity,
+         price: price,
+       }),
+     });
+
+     console.log('response :-',response);
+     
+ 
+     return response
+  } catch (error) {
+     console.error('Error fetching Admin cars:', error);
+     throw error;
+  }
+ };
+ 
+
 export const makePurchase = async (carId: string, quantity: string): Promise<PurchaseResponse> => {
   try {
     const response = await fetch(`${API_BASE_URL}/user/purchase`, {

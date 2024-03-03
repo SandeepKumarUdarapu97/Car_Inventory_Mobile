@@ -5,6 +5,8 @@ import UserScreen from '../screens/UserScreen';
 import {getData} from '../util';
 import LoadingComponent from '../components/LoadingComponent';
 import ViewCars from '../screens/ViewCars';
+import ManageInventory from '../screens/ManageInventory';
+import PurchaseHistory from '../screens/PurchaseHistory';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +67,16 @@ const AppStack = () => {
           name="ViewCars"
           component={ViewCars}
           options={{title: 'View cars', headerTitleAlign: 'center'}}
+        />
+        <Stack.Screen
+          name="ManageInventory"
+          component={ManageInventory}
+          options={{title: 'Manage Inventory', headerTitleAlign: 'center'}}
+        />
+        <Stack.Screen
+          name="PurchaseHistory"
+          component={PurchaseHistory}
+          options={{title: 'Purchase History', headerTitleAlign: 'center'}}
         />
       </Stack.Navigator>
     );
