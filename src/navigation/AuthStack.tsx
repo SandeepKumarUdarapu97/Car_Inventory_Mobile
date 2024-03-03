@@ -8,7 +8,7 @@ export const AuthStackNavigator = () => {
   console.log('LoginScreen');
   
   return (
-    <AuthStack.Navigator>
+    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
       <AuthStack.Screen name="Login" component={LoginScreen} />
     </AuthStack.Navigator>
   );

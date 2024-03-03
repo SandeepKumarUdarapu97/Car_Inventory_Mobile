@@ -15,8 +15,6 @@ export const loginUser = async (username: string, password: string): Promise<Aut
         'Content-Type': 'application/json',
       },
     });
-
-    // Assuming AuthResponse is the type of the response data
     const data: AuthResponse = response.data;
 
     return data;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
+import store from '../../redux/store';
 
 interface CarItemProps {
   item: {

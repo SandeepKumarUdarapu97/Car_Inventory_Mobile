@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 import {loginUser} from '../services/authService';
 import axios from 'axios';
+import {storeData} from '../util';
 
 interface LoginScreenProps {
   navigation: any;
@@ -11,35 +12,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const getConfig = async () => {
-    try {
-      const response = await axios.get(`http://192.168.1.7:3001/config`);
-      console.log('config', response);
-      const config = response.data;
-      return config;
-    } catch (error) {
-      console.error('config',error);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    getConfig();
-  }, []);
-
   const handleLogin = async () => {
     try {
       const response = await loginUser(username, password);
-      console.log('response : ', response);
-
-      if (response.success) {
-        if (response.userRole === 'admin') {
-          navigation.navigate('Admin');
-        } else {
-          navigation.navigate('User');
-        }
+      storeData('token', response.token);
+      storeData('role', response.role);
+      if (response.role === 'admin') {
+        navigation.navigate('App');
+        navigation.navigate('Admin');
       } else {
-        alert('Authentication failed. Please check your credentials.');
+        navigation.navigate('App');
+        navigation.navigate('User');
       }
     } catch (error) {
       console.error('Error logging in:', error);
