@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { loginUser } from '../../services/authService';
 
@@ -12,8 +12,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await loginUser(username, password);
-
+      const response = await loginUser('user', 'userPassword');
+      console.log('response : ',response);
+      
       if (response.success) {
         if (response.userRole === 'admin') {
           navigation.navigate('Admin');
@@ -28,6 +29,12 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       alert('An error occurred. Please try again later.');
     }
   };
+
+  useEffect(()=>{
+    console.log('Handle login');
+    
+    handleLogin()
+  },[])
 
   return (
     <View style={styles.container}>
