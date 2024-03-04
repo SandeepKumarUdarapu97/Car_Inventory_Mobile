@@ -2,7 +2,8 @@ import { Alert } from "react-native";
 import { removeData } from "../util";
 import { useNavigation } from "@react-navigation/native";
 
-const API_BASE_URL = 'http://192.168.1.7:3001';
+// const API_BASE_URL = 'http://192.168.1.7:3001';
+const API_BASE_URL = 'http://localhost:3001';
 
 interface CarData {
 
@@ -69,12 +70,13 @@ export const addCar = async (token: string, brand: string, model: string, quanti
  };
  
 
-export const makePurchase = async (carId: string, quantity: string): Promise<PurchaseResponse> => {
+export const makePurchase = async (token: string, carId: string, quantity: string): Promise<PurchaseResponse> => {
   try {
     const response = await fetch(`${API_BASE_URL}/user/purchase`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         userId: 'replace-with-user-id',
@@ -82,8 +84,7 @@ export const makePurchase = async (carId: string, quantity: string): Promise<Pur
         quantity: parseInt(quantity),
       }),
     });
-    const data: PurchaseResponse = await response.json();
-    return data;
+    return response;
   } catch (error) {
     console.error('Error making purchase:', error);
     throw error;

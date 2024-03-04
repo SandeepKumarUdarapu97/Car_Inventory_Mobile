@@ -1,36 +1,31 @@
-import React, {useEffect, useState} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  StackNavigationProp,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import AdminScreen from '../screens/AdminScreen';
 import UserScreen from '../screens/UserScreen';
-import {getData} from '../util';
-import LoadingComponent from '../components/LoadingComponent';
+import {RootStackParamList, getData} from '../util';
 import ViewCars from '../screens/ViewCars';
 import ManageInventory from '../screens/ManageInventory';
 import PurchaseHistory from '../screens/PurchaseHistory';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import LoadingComponent from '../components/Common/LoadingComponent';
 
 const Stack = createStackNavigator();
 
+type AppStackNavigationProp = StackNavigationProp<RootStackParamList, 'App'>;
+type AppStackRouteProp = RouteProp<RootStackParamList, 'App'>;
+
 const AppStack = () => {
-  const [role, setRole] = useState(null);
+  const route = useRoute();
+  console.log('route :-', route.params.role);
 
-  useEffect(() => {
-    const fetchRole = async () => {
-      try {
-        const userRole = await getData('role');
-        setRole(userRole);
-      } catch (error) {
-        console.error('Error fetching role:', error);
-      }
-    };
-
-    fetchRole();
-  }, []);
-
-  if (role === null) {
+  if (route.params.role === null || route.params.role === '') {
     return <LoadingComponent />;
   }
 
-  if (role === 'user') {
+  if (route.params.role === 'user') {
     return (
       <Stack.Navigator initialRouteName="User">
         <Stack.Screen
@@ -46,12 +41,18 @@ const AppStack = () => {
           name="ViewUserCars"
           component={ViewCars}
           options={{title: 'View cars', headerTitleAlign: 'center'}}
+          initialParams={{role: route.params.role}}
+        />
+        <Stack.Screen
+          name="PurchaseHistory"
+          component={PurchaseHistory}
+          options={{title: 'Purchase History', headerTitleAlign: 'center'}}
         />
       </Stack.Navigator>
     );
   }
 
-  if (role === 'admin') {
+  if (route.params.role === 'admin') {
     return (
       <Stack.Navigator initialRouteName="Admin">
         <Stack.Screen
@@ -67,6 +68,7 @@ const AppStack = () => {
           name="ViewCars"
           component={ViewCars}
           options={{title: 'View cars', headerTitleAlign: 'center'}}
+          initialParams={{role: route.params.role}}
         />
         <Stack.Screen
           name="ManageInventory"

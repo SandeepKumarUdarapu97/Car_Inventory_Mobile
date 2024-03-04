@@ -33,3 +33,20 @@ export const removeData = async (key: string) => {
   }
 };
 
+export const formatDateToIST = (dateString: string): string => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('en-GB', {
+     day: '2-digit',
+     month: '2-digit',
+     year: 'numeric',
+     timeZone: 'Asia/Kolkata',
+  }).format(date);
+ };
+
+ export type RootStackParamList = {
+  Auth: undefined;
+  App: { role: string; otherParam?: string };
+  // Add other screens as needed
+};
+
+ 

@@ -1,16 +1,37 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:3001';
 
 interface PurchaseData {
 }
 
-export const fetchUserPurchases = async (userId: string): Promise<PurchaseData[]> => {
+export const fetchUserPurchases = async (token: string): Promise<object> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/user/purchases?userId=${userId}`);
-    const data: PurchaseData[] = await response.json();
-    return data;
+    const response = await fetch(`${API_BASE_URL}/user/purchases`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("fetchUserPurchases response :",response);
+    
+    return response;
   } catch (error) {
-    console.error('Error fetching user purchases:', error);
+    console.error('Error fetching user purchases:', error,token);
     throw error;
   }
 };
+export const fetchAdminPurchases = async (token: string): Promise<object> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/purchases`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("fetchUserPurchases response :",response);
+    
+    return response;
+  } catch (error) {
+    console.error('Error fetching user purchases:', error,token);
+    throw error;
+  }
+};
+ 
 

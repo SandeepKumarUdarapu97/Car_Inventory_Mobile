@@ -4,9 +4,10 @@ import {getData, removeData} from '../util';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import {fetchCars} from '../services/carService';
-import { updateCars } from '../redux/MainSlice';
+import { updateCars, updatePurchases } from '../redux/MainSlice';
 import SectionalButton from '../components/Common/SectionalButton';
 import Icon from 'react-native-vector-icons/Entypo';
+import { fetchUserPurchases } from '../services/purchaseService';
 
 interface UserScreenProps {
   navigation: any;
@@ -62,6 +63,7 @@ const UserScreen: React.FC<UserScreenProps> = ({navigation}) => {
   useEffect(() => {
     if (token !== '' && !dataFetched) {
       fetchCarsLocal();
+      fetchUserPurchasesLocal()
       setDataFetched(true);
     }
   }, [token]);
@@ -74,13 +76,31 @@ const UserScreen: React.FC<UserScreenProps> = ({navigation}) => {
         logout(true)
       } else if (res.status === 200) {
         const data = await res.json();
-        console.log('fetchCars', data);
-        dispatch(updateCars(data))
+        console.log('fetchCars', data.reverse());
+        dispatch(updateCars(data.reverse()))
       } else {
         console.error('Unexpected response status:', res.status);
       }
     } catch (error) {
       console.error('Error fetching cars:', error);
+    }
+  };
+
+  const fetchUserPurchasesLocal = async () => {
+    try {
+      const res = await fetchUserPurchases(token);
+
+      if (res.status === 401) {
+        logout(true)
+      } else if (res.status === 200) {
+        const data = await res.json();
+        console.log('fetchUserPurchasesLocal', data);
+        dispatch(updatePurchases(data.reverse()))
+      } else {
+        console.error('Unexpected response status:', res.status);
+      }
+    } catch (error) {
+      console.error('Error fetch User Purchases:', error);
     }
   };
 
@@ -94,7 +114,7 @@ const UserScreen: React.FC<UserScreenProps> = ({navigation}) => {
       }}>
       <View>
         <SectionalButton buttonText="View cars" onPress={() => navigation.navigate('ViewUserCars')} />
-        <SectionalButton buttonText="Purchase history" onPress={() => {}} />
+        <SectionalButton buttonText="Purchase history" onPress={() => navigation.navigate('PurchaseHistory')} />
       </View>
       <View style={{alignItems: 'flex-end'}}>
         <TouchableOpacity

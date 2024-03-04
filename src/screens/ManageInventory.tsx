@@ -30,8 +30,8 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
   const [selectedItem, setSelectedItem] = useState<object>({});
   const [brand, setBrand] = useState<string>('');
   const [model, setModel] = useState<string>('');
-  const [quantity, setQuantity] = useState<string>('');
-  const [price, setPrice] = useState<string>('');
+  const [quantity, setQuantity] = useState<number | undefined>(undefined);
+  const [price, setPrice] = useState<number | undefined>(undefined);
 
   const dispatch = useDispatch();
 
@@ -82,7 +82,7 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
       } else if (res.status === 200) {
         const data = await res.json();
         console.log('fetchCars', data);
-        dispatch(updateCars(data));
+        dispatch(updateCars(data.reverse()));
       } else {
         console.error('Unexpected response status:', res.status);
       }
@@ -93,6 +93,7 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
 
   const AddCarSubmitForm = async () => {
     try {
+      console.log('AddCarSubmitForm', brand,model,quantity,price);
       const res = await addCar(token, brand, model, quantity, price);
       console.log('AddCarSubmitForm', res);
       if (res.status === 401 || res.status === 500) {
@@ -102,8 +103,8 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
         setShowAddCar(false);
         setBrand('');
         setModel('');
-        setQuantity('');
-        setPrice('');
+        setQuantity(undefined);
+        setPrice(undefined);
       } else {
         console.error('Unexpected response status:', res.status);
       }
@@ -117,7 +118,7 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
       <View style={styles.itemContainer}>
         <View>
           <Text style={styles.itemText}>{item.brand + ' '}</Text>
-          <Text style={styles.itemModel}>{item.model}</Text>
+          <Text style={styles.itemModel}>{item.modelName}</Text>
           <Text style={styles.itemPrice}>Price : {item.price}</Text>
         </View>
         <TouchableOpacity
@@ -148,11 +149,22 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
     }
   };
 
+  const handlePriceChange = (text: string) => {
+    const parsedPrice = parseFloat(text);
+    setPrice(isNaN(parsedPrice) ? undefined : parsedPrice);
+  };
+
+  const handleQuantityChange = (text: string) => {
+    const parsedQuantity = parseInt(text, 10);
+    setQuantity(isNaN(parsedQuantity) ? undefined : parsedQuantity);
+  };
+
   const AddCarModal = () => {
     return (
       <Modal visible transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            <Text style={{color:'black',fontWeight:'600',marginBottom:(height/100)*0.75}}>Brand :-</Text>
             <TextInput
               style={styles.inputField}
               placeholder="Car Brand"
@@ -160,6 +172,7 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
               onChangeText={setBrand}
               value={brand}
             />
+            <Text style={{color:'black',fontWeight:'600',marginBottom:(height/100)*0.75}}>Model :-</Text>
             <TextInput
               style={styles.inputField}
               placeholder="Car Model"
@@ -167,21 +180,23 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
               onChangeText={setModel}
               value={model}
             />
+            <Text style={{color:'black',fontWeight:'600',marginBottom:(height/100)*0.75}}>Price :-</Text>
             <TextInput
               style={styles.inputField}
               placeholder="Car Price"
               placeholderTextColor="#7a42f4"
-              onChangeText={setPrice}
-              value={price}
+              onChangeText={handlePriceChange}
+              value={price !== undefined ? price.toString() : ''}
+              keyboardType="numeric"
             />
-
+            <Text style={{color:'black',fontWeight:'600',marginBottom:(height/100)*0.75}}>Quantity :-</Text>
             <TextInput
               style={styles.inputField}
               placeholder="Car Quantity"
               placeholderTextColor="#7a42f4"
-              keyboardType="number-pad"
-              onChangeText={setQuantity}
-              value={quantity}
+              keyboardType="numeric"
+              onChangeText={handleQuantityChange}
+              value={quantity !== undefined ? quantity.toString() : ''}
             />
             <View
               style={{
@@ -223,8 +238,8 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
           onPress={() => {
             setBrand('');
             setModel('');
-            setQuantity('');
-            setPrice('');
+            setQuantity(undefined);
+            setPrice(undefined);
             setShowAddCar(true);
           }}
           style={styles.button}>
@@ -234,9 +249,7 @@ const ManageInventory: React.FC<ManageInventoryProps> = ({navigation}) => {
           disabled={Object.keys(selectedItem).length === 0}
           onPress={() => {
             setBrand(selectedItem.brand);
-            setModel(selectedItem.model);
-            setQuantity(selectedItem.quantity);
-            setPrice(selectedItem.price);
+            setModel(selectedItem.modelName);
             setShowAddCar(true);
           }}
           style={[

@@ -7,11 +7,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getData, removeData} from '../util';
 import {fetchAdminCars} from '../services/carService';
 import {useNavigation} from '@react-navigation/native';
-import {updateCars} from '../redux/MainSlice';
+import {updateCars, updatePurchases} from '../redux/MainSlice';
+import {fetchAdminPurchases} from '../services/purchaseService';
 
 const {width, height} = Dimensions.get('window');
 interface AdminScreenProps {
-  navigation: any
+  navigation: any;
 }
 
 const AdminScreen: React.FC<AdminScreenProps> = ({navigation}) => {
@@ -37,6 +38,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({navigation}) => {
   useEffect(() => {
     if (token !== '' && !dataFetched) {
       fetchCarsLocal();
+      fetchPurchasesLocal();
       setDataFetched(true);
     }
   }, [token]);
@@ -66,6 +68,24 @@ const AdminScreen: React.FC<AdminScreenProps> = ({navigation}) => {
     }
   };
 
+  const fetchPurchasesLocal = async () => {
+    try {
+      const res = await fetchAdminPurchases(token);
+
+      if (res.status === 401) {
+        logout(true);
+      } else if (res.status === 200) {
+        const data = await res.json();
+        console.log('fetchUserPurchasesLocal', data);
+        dispatch(updatePurchases(data.reverse()));
+      } else {
+        console.error('Unexpected response status:', res.status);
+      }
+    } catch (error) {
+      console.error('Error fetch User Purchases:', error);
+    }
+  };
+
   const fetchCarsLocal = async () => {
     try {
       const res = await fetchAdminCars(token);
@@ -75,7 +95,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({navigation}) => {
       } else if (res.status === 200) {
         const data = await res.json();
         console.log('fetchCars', data);
-        dispatch(updateCars(data));
+        dispatch(updateCars(data.reverse()));
       } else {
         console.error('Unexpected response status:', res.status);
       }
@@ -83,7 +103,6 @@ const AdminScreen: React.FC<AdminScreenProps> = ({navigation}) => {
       console.error('Error fetching cars:', error);
     }
   };
-  console.log('cars:-', cars);
 
   return (
     <View
@@ -94,9 +113,18 @@ const AdminScreen: React.FC<AdminScreenProps> = ({navigation}) => {
         backgroundColor: 'white',
       }}>
       <View>
-        <SectionalButton buttonText="View cars" onPress={() => navigation.navigate('ViewCars')} />
-        <SectionalButton buttonText="Manage inventory" onPress={() => navigation.navigate('ManageInventory')} />
-        <SectionalButton buttonText="Purchase history" onPress={() => navigation.navigate('PurchaseHistory')} />
+        <SectionalButton
+          buttonText="View cars"
+          onPress={() => navigation.navigate('ViewCars')}
+        />
+        <SectionalButton
+          buttonText="Manage inventory"
+          onPress={() => navigation.navigate('ManageInventory')}
+        />
+        <SectionalButton
+          buttonText="Purchase history"
+          onPress={() => navigation.navigate('PurchaseHistory')}
+        />
       </View>
       <View style={{alignItems: 'flex-end'}}>
         <TouchableOpacity
